@@ -9,17 +9,23 @@ function [theta,RMSEtr,RMSEcv] = kfold_cross_validation(reg, X, y, k, models)
         for fold = 1:k
             [Xcv,ycv,Xtr,ytr] = particion(fold,k,X,y);
             if(reg) %regularizacion
-                H = Xtr'*Xtr + models(model)*diag([0 ones(1,length(models))]);
-                th = H \ (Xtr'*ytr);
+                [Xn,mu,sig] = normalizar(Xtr);
+                H = Xn'*Xn + models(model)*diag([0 ones(1,size(Xn,2)-1)]);
+                th = H \ (Xn'*ytr);
+                [th] = desnormalizar(th,mu,sig);
+
+                err_T = err_T + RMSE(th,Xtr,ytr);
+                err_V = err_V + RMSE(th,Xcv,ycv);
             else
                 Xtr_exp = expandir(Xtr,models(model,:));
                 Xcv_exp = expandir(Xcv,models(model,:));
                 [Xn,mu,sig] = normalizar(Xtr_exp);
                 th = Xn \ ytr;
                 [th] = desnormalizar(th,mu,sig);
+
+                err_T = err_T + RMSE(th,Xtr_exp,ytr);
+                err_V = err_V + RMSE(th,Xcv_exp,ycv);
             end
-            err_T = err_T + RMSE(th,Xtr_exp,ytr);
-            err_V = err_V + RMSE(th,Xcv_exp,ycv);
         end
         err_T = err_T / k;
         RMSEtr = [RMSEtr;err_T];
@@ -30,11 +36,11 @@ function [theta,RMSEtr,RMSEcv] = kfold_cross_validation(reg, X, y, k, models)
         end
     end
     if(reg) %regularizacion
-         H = Xtr'*Xtr + models(best_model)*diag([0 ones(1,length(models))]);
+         H = Xtr'*Xtr + models(best_model)*diag([0 ones(1,size(Xtr,2)-1)]);
          theta = H \ (Xtr'*ytr);
     else
         Xtr_exp = expandir(Xtr,models(best_model,:));
         Xcv_exp = expandir(Xcv,models(best_model,:));
-        theta = Xn \ ytr;
+        theta = Xtr_exp \ ytr;
 end
 
