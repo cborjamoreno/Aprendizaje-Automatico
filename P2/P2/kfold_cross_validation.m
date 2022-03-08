@@ -1,4 +1,4 @@
-function [theta,RMSEtr,RMSEcv] = kfold_cross_validation(reg, X, y, k, models)
+function [theta,best_model,RMSEtr,RMSEcv] = kfold_cross_validation(reg, X, y, k, models)
     best_model = 0;
     best_errV = inf;
     RMSEtr = [];
@@ -32,6 +32,7 @@ function [theta,RMSEtr,RMSEcv] = kfold_cross_validation(reg, X, y, k, models)
         err_V = err_V / k;
         RMSEcv = [RMSEcv;err_V];
         if err_V < best_errV
+            best_errV = err_V;
             best_model = model;
         end
     end

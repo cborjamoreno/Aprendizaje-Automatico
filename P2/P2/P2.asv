@@ -20,8 +20,8 @@ ylabel('RMSE'); xlabel('Grado polinomio Antigúedad');
 
 plot((1:length(RMSEtr)), RMSEtr, 'r-');
 plot((1:length(RMSEcv)), RMSEcv, 'b-');
-plot(best_model, RMSEcv(best_model), 'g.');
-legend('Error de entrenamiento', 'Error de validación', 'Punto ideal');
+plot(best_model, min(RMSEcv), 'g.');
+legend('Error de entrenamiento', 'Error de validación');
 
 %% Selección del grado del polinomio para los kilómetros del coche
 models=[5 1 1 ; 5 2 1; 5 3 1; 5 4 1; 5 5 1; 5 6 1; 5 7 1; 5 8 1; 5 9 1; 5 10 1];
@@ -33,8 +33,8 @@ ylabel('RMSE'); xlabel('Grado polinomio Kilómetros');
 
 plot((1:length(RMSEtr)), RMSEtr, 'r-');
 plot((1:length(RMSEcv)), RMSEcv, 'b-');
-plot(best_model, RMSEcv(best_model), 'g.');
-legend('Error de entrenamiento', 'Error de validación', 'Punto ideal');
+plot(models(best_model), min(RMSEcv), 'g.');
+legend('Error de entrenamiento', 'Error de validación');
 
 %% Selección del grado del polinomio para la potencia del coche
 models=[5 6 1 ; 5 6 2; 5 6 3; 5 6 4; 5 6 5; 5 6 6; 5 6 7; 5 6 8; 5 6 9; 5 6 10];
@@ -46,8 +46,8 @@ ylabel('RMSE'); xlabel('Grado polinomio Potencia');
 
 plot((1:length(RMSEtr)), RMSEtr, 'r-');
 plot((1:length(RMSEcv)), RMSEcv, 'b-');
-plot(best_model, RMSEcv(best_model), 'g.');
-legend('Error de entrenamiento', 'Error de validación', 'Punto ideal');
+plot(models(best_model), min(RMSEcv), 'g.');
+legend('Error de entrenamiento', 'Error de validación');
 
 %% Regularización
 i = 0.00000001;
@@ -64,7 +64,9 @@ figure;
 grid on; hold on;
 ylabel('RMSE'); xlabel('Factor de regularización');
 
+min(RMSEcv)
+
 plot(lambda, RMSEtr, 'r-');
 plot(lambda, RMSEcv, 'b-');
-plot(lambda(best_model), RMSEcv(best_model), 'g.');
+plot(lambda(best_model), min(RMSEcv), 'g.');
 legend('Error de entrenamiento', 'Error de validación', 'Punto ideal');
