@@ -1,4 +1,4 @@
-function [theta,best_model,RMSEtr,RMSEcv] = kfold_cross_validation(reg, X, y, k, models)
+function [best_model,RMSEtr,RMSEcv] = kfold_cross_validation(reg, X, y, k, models)
     best_model = 0;
     best_errV = inf;
     RMSEtr = [];
@@ -36,13 +36,5 @@ function [theta,best_model,RMSEtr,RMSEcv] = kfold_cross_validation(reg, X, y, k,
             best_model = model;
         end
     end
-    if(reg) %regularizacion
-         H = Xtr'*Xtr + models(best_model)*diag([0 ones(1,size(Xtr,2)-1)]);
-         theta = H \ (Xtr'*ytr);
-    else
-        X_exp = expandir(X,models(best_model,:));
-        [Xn,mu,sig] = normalizar(X_exp);
-        theta = Xn \ y;
-        theta = desnormalizar(theta,mu,sig);
 end
 
