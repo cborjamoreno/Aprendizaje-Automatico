@@ -7,7 +7,7 @@ clear ; close all;
 %  contains the label (y).
 
 data = load('mchip_data.txt');
-X = data(:, [1, 2]); 
+X = data(:, [1, 2]);
 y = data(:, 3);
 N = length(y);
 p = randperm(N); %reordena aleatoriamente los datos

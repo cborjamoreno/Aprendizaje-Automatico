@@ -4,7 +4,7 @@ function [ Xcv, ycv, Xtr, ytr ] = particion( i, nfolds, X, y )
 
 N = size(y,1);  %Numero de muestras totales
 indices = [1:N];
-cv = (indices > floor(test_percent) & (indices <= floor(i*N/nfolds));   
+cv = (indices > floor((i-1)*N/nfolds)) & (indices <= floor(i*N/nfolds));   
 
 Xcv = X( cv,:);
 Xtr = X(~cv,:);

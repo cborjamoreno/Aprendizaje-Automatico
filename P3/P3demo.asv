@@ -9,10 +9,8 @@ clear ; close all;
 data = load('exam_data.txt');
 [dataTrain, dataTest]separar(data,0.2);
 ytrain = dataTrain(:, 3);
-Xtrain = dataTrain(:, [1, 2]);
-N = length(ytrain);
-ytest = dataTest(:, 3);
-Xtest = dataTest(:, [1, 2]);
+Xtrain = data(:, [1, 2]);
+N = length(y);
 
 
 
