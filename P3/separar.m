@@ -1,12 +1,13 @@
-function [dataTrain,dataTest] = separar(data, test_percent)
+function [Xtr, ytr, Xtest, ytest] = separar(X, y, train_percent)
 %Separa data en datos de entrenamiento y datos de test. Utilizando
-%test_percent como porcentaje de datos de test.
+%train_percent como porcentaje de datos de entrenamiento.
 
-    cv = cvpartition(size(data,1),'HoldOut',test_percent);
-    idx = cv.test;
-    
-% Separar en datos de entrenamiento y test
-    dataTrain = data(~idx,:);
-    dataTest  = data(idx,:);
+    N = size(X,1);
+    idx = randperm(N);
+    Xtr = X(idx(1:round(N*train_percent)),:);
+    ytr = y(idx(1:round(N*train_percent)),:);
+    Xtest = X(idx(round(N*train_percent)+1:end),:);
+    ytest = y(idx(round(N*train_percent)+1:end),:);
+
 end
 
