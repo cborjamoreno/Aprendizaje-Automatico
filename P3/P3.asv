@@ -61,9 +61,9 @@ N = length(y);
 
 Xtr_exp = mapFeature(Xtr(:,1),Xtr(:,2));
 
-i = 0.000001;
+i = 0.0000000000000001;
 lambda = [];
-while i < 10
+while i < 0.12
     lambda = [lambda i];
     i = i .* 10;
 end

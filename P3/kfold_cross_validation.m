@@ -1,12 +1,12 @@
-function [best_model,RMSEtr,RMSEcv] = kfold_cross_validation(X, y, k, models)
+function [best_model,Etr,Ecv] = kfold_cross_validation(X, y, k, models)
 %k-fold para elegir el valor del parámetro de regularizacion
     best_model = 0;
     best_errV = inf;
-    RMSEtr = [];
-    RMSEcv = [];
+    Etr = [];
+    Ecv = [];
     [rows,~] = size(models);
     for model = 1:rows
-        err_T = 0; err_V = 0;
+        etr = 0; ecv = 0;
         for fold = 1:k
             [Xcv,ycv,Xtr,ytr] = particion(fold,k,X,y);
 
@@ -15,15 +15,21 @@ function [best_model,RMSEtr,RMSEcv] = kfold_cross_validation(X, y, k, models)
             th = H \ (Xn'*ytr);
             [th] = desnormalizar(th,mu,sig);
 
-            err_T = err_T + RMSE(th,Xtr,ytr);
-            err_V = err_V + RMSE(th,Xcv,ycv);
+            h = 1./(1+exp(-(Xtr*th)));
+            ytr_pred = double(h >= 0.5);
+            etr = etr + tasa_error(ytr_pred,ytr);
+
+            h = 1./(1+exp(-(Xcv*th)));
+            ycv_pred = double(h >= 0.5);
+            ecv = ecv + tasa_error(ycv_pred,ycv);
+
         end
-        err_T = err_T / k;
-        RMSEtr = [RMSEtr;err_T];
-        err_V = err_V / k;
-        RMSEcv = [RMSEcv;err_V];
-        if err_V < best_errV
-            best_errV = err_V;
+        etr = etr / k;
+        Etr = [Etr;etr];
+        ecv = ecv / k;
+        Ecv = [Ecv;ecv];
+        if ecv < best_errV
+            best_errV = ecv;
             best_model = model;
         end
     end
