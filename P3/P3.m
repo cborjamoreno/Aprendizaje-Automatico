@@ -12,12 +12,6 @@ X = data(:, [1, 2]);
 N = length(y);
 [Xtr, ytr, Xtest, ytest] = separar(X,y,0.8);
 
-plotData(Xtr, ytr);
-xlabel('Exam 1 score')
-ylabel('Exam 2 score')
-legend('Admitted', 'Not admitted')
-
-
 %% Regresión logística básica
 Xtr = [ones(height(ytr),1) Xtr];
 Xtest = [ones(height(ytest),1) Xtest];
@@ -46,6 +40,14 @@ xlabel('Exam 1 score');
 ylabel('Exam 2 score');
 
 %% Ejemplo alumno
-examen = [ones(100,1)*45 0:100];
+segExamen = 1:100;
+size(segExamen)
+size(ones(100,1))
+examen = [ones(100,1) ones(100,1)*45 segExamen'];
 h = 1./(1+exp(-(examen*theta)));
-plot(examen,, 'r-');
+
+figure;
+grid on; hold on;
+xlabel('Nota 2º examen');
+ylabel('Probabilidad de admisión');
+plot(examen(:,3), h, 'r-');
