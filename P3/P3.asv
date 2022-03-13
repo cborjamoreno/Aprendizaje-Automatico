@@ -6,7 +6,6 @@ clear ; close all;
 data = load('exam_data.txt');
 y = data(:, 3);
 X = data(:, [1, 2]);
-N = length(y);
 [Xtr, ytr, Xtest, ytest] = separar(X,y,0.8);
 
 %% Regresión logística básica
@@ -19,17 +18,17 @@ options.display = 'final'; %otros: 'iter' , 'none‘
 options.method = 'newton'; %por defecto: 'lbfgs'
 
 %entrenamiento
-theta = minFunc(@costeLogistico,theta_ini, options, Xtr, ytr)
+theta = minFunc(@costeLogistico,theta_ini, options, Xtr, ytr);
 
 %tasa de error entrenamiento
 h = 1./(1+exp(-(Xtr*theta)));
 ytr_pred = double(h >= 0.5);
-Etr = tasa_error(ytr_pred,ytr)
+Etr = tasa_error(ytr_pred,ytr);
 
 %tasa de error test
 h = 1./(1+exp(-(Xtest*theta)));
 ytest_pred = double(h >= 0.5);
-Etest = tasa_error(ytest_pred,ytest)
+Etest = tasa_error(ytest_pred,ytest);
 
 %dibujar recta de regresión logística
 plotDecisionBoundary(theta, Xtr, ytr);
@@ -59,22 +58,32 @@ N = length(y);
 
 %% Regularización
 
-Xtr_exp = mapFeature(Xtr(:,1),Xtr(:,2));
+Xtr_exp = mapFeature(Xtr(:,1),Xtr(:,2));    %expansión de funciones base
+lambda = logspace(-6,5);    %vector de lambdas logarítimico
 
-i = 0.0000000000000001;
-lambda = [];
-while i < 0.12
-    lambda = [lambda i];
-    i = i .* 10;
-end
-
+%elegir mejor parámetro de regularización
 [best_lambda,Etr,Ecv] = kfold_cross_validation(Xtr_exp,ytr,10,lambda')
 
+%Dibujar evolución tasas de error de entrenamiento y validación
 figure;
 grid on; hold on;
 ylabel('Tasa de error'); xlabel('Factor de regularización');
 
-plot(lambda, Etr, 'r-');
-plot(lambda, Ecv, 'b-');
-plot(lambda(best_lambda), Ecv(best_lambda), 'g.');
+set(gca, 'XScale', 'log', 'YScale', 'log');
+loglog(lambda, Etr, 'r-');
+loglog(lambda, Ecv, 'b-');
+loglog(lambda(best_lambda), Ecv(best_lambda), 'g.');
 legend('Tasa de error de entrenamiento', 'Tasa de error de validación', 'Punto ideal');
+
+%entrenar todos los datos mejor modelo
+H = Xtr_exp'*Xtr_exp + lambda(best_lambda)*diag([0 ones(1,size(Xtr_exp,2)-1)]);
+th1 = H \ (Xtr_exp'*ytr);
+
+%entrenar todos los datos lambda = 0
+H = Xtr_exp'*Xtr_exp + 0*diag([0 ones(1,size(Xtr_exp,2)-1)]);
+th2 = H \ (Xtr_exp'*ytr);
+
+%dibujar recta de regresión logística
+plotDecisionBoundary(th1, Xtr, ytr);
+xlabel('Exam 1 score');
+ylabel('Exam 2 score');

@@ -9,11 +9,8 @@ function [best_model,Etr,Ecv] = kfold_cross_validation(X, y, k, models)
         etr = 0; ecv = 0;
         for fold = 1:k
             [Xcv,ycv,Xtr,ytr] = particion(fold,k,X,y);
-
-            [Xn,mu,sig] = normalizar(Xtr);
-            H = Xn'*Xn + models(model)*diag([0 ones(1,size(Xn,2)-1)]);
-            th = H \ (Xn'*ytr);
-            [th] = desnormalizar(th,mu,sig);
+            H = Xtr'*Xtr + models(model)*diag([0 ones(1,size(Xtr,2)-1)]);
+            th = H \ (Xtr'*ytr);
 
             h = 1./(1+exp(-(Xtr*th)));
             ytr_pred = double(h >= 0.5);
