@@ -1,5 +1,5 @@
-function [E] = tasaError(salidas,y)
+function [E] = tasa_error(salidas,y)
 %Calcula la tasa de error
-    E = sum(salidas ~= y)/length(y);
+    E = sum(salidas ~= y)/height(y);
 end
 
