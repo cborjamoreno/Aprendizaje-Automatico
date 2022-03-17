@@ -9,7 +9,6 @@ rand('state',0);
 
 %% Regresión logística regularizada
 Xtr = [ones(height(ytr),1) Xtr];
-Xcv = [ones(height(ycv),1) Xcv];
 theta = [zeros(size(Xtr,2),1)];
 
 options = [];
@@ -24,7 +23,6 @@ best_model = 0;
 best_errV = inf;
 
 for model = 1:length(lambda)
-    etr = 0; ecv = 0;
     for i = 1:10
         y_clasif = (ytr == i);
         th = minFunc(@costeLogReg, zeros(size(Xtr,2),1), options, Xtr, y_clasif, ...
@@ -47,11 +45,11 @@ for model = 1:length(lambda)
 end
 
 for i = 1:10
-    y_clasif = (ytr == i);
-    th = minFunc(@costeLogReg, zeros(size(Xtr,2),1), options, Xtr, y_clasif, ...
-        lambda(best_model));
-    theta = [theta th];
-end
+        y_clasif = (ytr == i);
+        th = minFunc(@costeLogReg, zeros(size(Xtr,2),1), options, Xtr, y_clasif, ...
+            lambda(model));
+        theta = [theta th];
+    end
 
 h = 1./(1+exp(-(Xtr*theta))) >= 0.5;
 verConfusiones(Xtr, ytr, h);
