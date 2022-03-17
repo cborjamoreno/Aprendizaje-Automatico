@@ -7,6 +7,7 @@ rand('state',0);
 [Xtr, ytr, Xcv, ycv] = separar(X,y,0.8); %   Separar 20% de los datos para 
                                          % validación
 N_pixels = width(Xtr);
+N_clases = 10;
 
 %% Regresión logística regularizada
 Xtr = [ones(height(ytr),1) Xtr];
@@ -68,6 +69,7 @@ legend('Tasa de error de entrenamiento', 'Tasa de error de validación', 'Punto 
 
 % Entrenar todos los datos con el mejor modelo
 Xtest = [ones(height(ytest),1) Xtest];
+X = [ones(height(y),1) X];
 theta = zeros(N_pixels+1,1);
 
 for i = 1:10
@@ -83,15 +85,25 @@ h(:,1) = [];
 
 % Calcular matriz de confusión
 
-TP = sum(ytest_pred == 1 & ytest == 1);
-FP = sum(ytest_pred == 1 & ytest == 0);
-TN = sum(ytest_pred == 0 & ytest == 0);
-FN = sum(ytest_pred == 0 & ytest == 1);
+m = zeros(N_clases,N_clases);
 
-P = TP/(TP+FP);
-R = TP/(TP+FN);
+for i=1:N_clases
+    for j=1:N_clases
+        m(i,j) = sum(ytest_pred == i & ytest == j);
+    end
+end
 
-M_CONF = [TP FP; TN FN];
-disp(M_CONF);
+disp(m);
+
+% TP = sum(ytest_pred == 1 & ytest == 1);
+% FP = sum(ytest_pred == 1 & ytest == 0);
+% TN = sum(ytest_pred == 0 & ytest == 0);
+% FN = sum(ytest_pred == 0 & ytest == 1);
+% 
+% P = TP/(TP+FP);
+% R = TP/(TP+FN);
+% 
+% M_CONF = [TP FP; TN FN];
+% disp(M_CONF);
 
 verConfusiones(Xtest, ytest, ytest_pred);
