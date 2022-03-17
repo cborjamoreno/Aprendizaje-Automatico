@@ -1,4 +1,5 @@
 clear ; close all;
+addpath(genpath('../minfunc'));
 %% Load Data exams
 %  The first two columns contains the exam scores and the third column
 %  contains the label.
