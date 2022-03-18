@@ -34,17 +34,11 @@ for model = 1:length(lambda)
         theta = [theta th];
     end
 
-    h = 1./(1+exp(-(Xtr*theta)));
-    h(:,1) = [];
-    [~,h] = max(h,[],2);
+    ytr_pred = pred_sigmoid(Xtr,theta);
+    etr = tasa_error(ytr_pred,ytr);
 
-    etr = tasa_error(h,ytr);
-
-    h = 1./(1+exp(-(Xcv*theta)));
-    h(:,1) = [];
-    [~,h] = max(h,[],2);
-
-    ecv = tasa_error(h,ycv);
+    ycv_pred = pred_sigmoid(Xcv,theta);
+    ecv = tasa_error(ycv_pred,ycv);
 
     Etr = [Etr;etr];
     Ecv = [Ecv;ecv];
@@ -79,9 +73,7 @@ for i = 1:10
     theta = [theta th];
 end
 
-h = 1./(1+exp(-(Xtest*theta)));
-h(:,1) = [];
-[~,ytest_pred] = max(h,[],2);
+ytest_pred = pred_sigmoid(Xtest,theta);
 
 % Calcular matriz de confusión
 
@@ -93,17 +85,29 @@ for i=1:N_clases
     end
 end
 
-disp(m);
 
-% TP = sum(ytest_pred == 1 & ytest == 1);
-% FP = sum(ytest_pred == 1 & ytest == 0);
-% TN = sum(ytest_pred == 0 & ytest == 0);
-% FN = sum(ytest_pred == 0 & ytest == 1);
-% 
-% P = TP/(TP+FP);
-% R = TP/(TP+FN);
-% 
-% M_CONF = [TP FP; TN FN];
-% disp(M_CONF);
+%   Array de precisiones. La componente i in [1,10] contiene la precisión
+% de la clase i. La precisión de la clase 0 está en la componente i=10.
+P = zeros(1,N_clases);
+
+%   Array de recalls. La componente i in [1,10]contiene el recall de la 
+% clase i. El recall de la clase 0 está en la componente i=10.
+R = zeros(1,N_clases);
+
+% Cálculo precisión de cada clase
+for i=1:N_clases-1
+    P(i) = m(i,i)/sum(m(i,:));
+end
+P(10) = m(10,10)/sum(m(10,:));
+
+% Cálculo recall de cada clase
+for i=1:N_clases-1
+    R(i) = m(i,i)/sum(m(:,i));
+end
+R(10) = m(10,10)/sum(m(:,10));
+
+disp(m);
+disp(P);
+disp(R);
 
 verConfusiones(Xtest, ytest, ytest_pred);

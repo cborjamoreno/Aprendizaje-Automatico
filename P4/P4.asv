@@ -85,24 +85,58 @@ h(:,1) = [];
 
 % Calcular matriz de confusión
 
-m = zeros(N_clases*N_clases,1);
+m = zeros(N_clases,N_clases);
 
 for i=1:N_clases
     for j=1:N_clases
-        m(i,j) = sum(ytest_pred == ytest);
+        m(i,j) = sum(ytest_pred == i & ytest == j);
     end
 end
 
 
-TP = sum(ytest_pred == 1 & ytest == 1);
-FP = sum(ytest_pred == 1 & ytest == 0);
-TN = sum(ytest_pred == 0 & ytest == 0);
-FN = sum(ytest_pred == 0 & ytest == 1);
+%   Array de precisiones. La componente i in [1,10] contiene la precisión
+% de la clase i. La precisión de la clase 0 está en la componente i=10.
+P = zeros(1,N_clases);
 
-P = TP/(TP+FP);
-R = TP/(TP+FN);
+%   Array de recalls. La componente i in [1,10]contiene el recall de la 
+% clase i. El recall de la clase 0 está en la componente i=10.
+R = zeros(1,N_clases);
 
-M_CONF = [TP FP; TN FN];
-disp(M_CONF);
+% Cálculo precisión de cada clase
+for i=1:N_clases-1
+    P(i) = m(i,i)/sum(m(i,:));
+end
+P(10) = m(10,10)/sum(m(10,:));
+
+% Cálculo recall de cada clase
+for i=1:N_clases-1
+    R(i) = m(i,i)/sum(m(:,i));
+end
+P(10) = m(10,10)/sum(m(10,:));
+
+P_1 = m(1,1)/sum(m(1,:));
+P_2 = m(2,2)/sum(m(2,:));
+P_3 = m(3,3)/sum(m(3,:));
+P_4 = m(4,4)/sum(m(4,:));
+P_5 = m(5,5)/sum(m(5,:));
+P_6 = m(6,6)/sum(m(6,:));
+P_7 = m(7,7)/sum(m(7,:));
+P_8 = m(8,8)/sum(m(8,:));
+P_9 = m(9,9)/sum(m(9,:));
+P_0 = m(10,10)/sum(m(10,:));
+
+% Cálculo recall de cada clase
+R_1 = m(1,1)/sum(m(:,1));
+P_2 = m(2,2)/sum(m(:,2));
+P_3 = m(3,3)/sum(m(:,:));
+P_4 = m(4,4)/sum(m(4,:));
+P_5 = m(5,5)/sum(m(5,:));
+P_6 = m(6,6)/sum(m(6,:));
+P_7 = m(7,7)/sum(m(7,:));
+P_8 = m(8,8)/sum(m(8,:));
+P_9 = m(9,9)/sum(m(9,:));
+P_0 = m(10,10)/sum(m(10,:));
+
+disp(m);
 
 verConfusiones(Xtest, ytest, ytest_pred);
