@@ -28,7 +28,8 @@ for model = 1:length(lambda)
     etr = 0; ecv = 0;
     theta = zeros(N_pixels+1,1);
     for i = 1:10
-        y_clasif = (ytr == i);
+        y_clasif = (ytr == i);  %   Obtener salidas booleanas para cada
+                                % clasificador
         th = minFunc(@costeLogReg, zeros(N_pixels+1,1), options, Xtr, ...
             y_clasif, lambda(model));
         theta = [theta th];
