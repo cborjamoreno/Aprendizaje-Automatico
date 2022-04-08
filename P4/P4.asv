@@ -1,4 +1,5 @@
 clear ; close all;
+addpath(genpath('../minfunc'));
 
 %% Load Data MNIST
 load('MNISTdata2.mat'); % Lee los datos: X, y, Xtest, ytest
@@ -7,21 +8,37 @@ rand('state',0);
                                          % validación
 N_pixels = width(Xtr);
 N_clases = 10;
-[N_tr,~] = size(ytr);
+
+%% Regresión logística regularizada
+Xtr = [ones(height(ytr),1) Xtr];
+Xcv = [ones(height(ycv),1) Xcv];
+
+options = [];
+options.display = 'final';
+options.method = 'lbfgs';
 lambda = logspace(-6, 2);
+
 Etr = [];
 Ecv = [];
-best_lambda = 0;
+
+best_model = 0;
 best_errV = inf;
 
-for l = 1:length(lambda)
+for model = 1:length(lambda)
     etr = 0; ecv = 0;
-    
-    modelo = entrenarGaussianas(Xtr,ytr,N_clases,0,lambda(l));
-    ytr_pred = clasificacionBayesiana(modelo,Xtr);
-    ycv_pred = clasificacionBayesiana(modelo,Xcv);
+    theta = zeros(N_pixels+1,1);
+    for i = 1:10
+        y_clasif = (ytr == i);  %   Obtener salidas booleanas para cada
+                                % clasificador
+        th = minFunc(@costeLogReg, zeros(N_pixels+1,1), options, Xtr, ...
+            y_clasif, lambda(model));
+        theta = [theta th];
+    end
 
+    ytr_pred = pred_sigmoid(Xtr,theta);
     etr = tasa_error(ytr_pred,ytr);
+
+    ycv_pred = pred_sigmoid(Xcv,theta)/10;
     ecv = tasa_error(ycv_pred,ycv);
 
     Etr = [Etr;etr];
@@ -29,7 +46,7 @@ for l = 1:length(lambda)
 
     if ecv < best_errV
         best_errV = ecv;
-        best_lambda = l;
+        best_model = model;
     end
 end
 
@@ -40,16 +57,24 @@ ylabel('Tasa de error'); xlabel('Factor de regularización');
 
 plot(log10(lambda), Etr, 'r-', 'LineWidth',1);
 plot(log10(lambda), Ecv, 'b-', 'LineWidth',1);
-plot(log10(lambda(best_lambda)), Ecv(best_lambda), 'g.');
+plot(log10(lambda(best_model)), Ecv(best_model), 'g.');
 legend('Tasa de error de entrenamiento', 'Tasa de error de validación', 'Punto ideal');
-
 
 %% Matriz de confusión y Precisión/Recall
 
 % Entrenar todos los datos con el mejor modelo
+Xtest = [ones(height(ytest),1) Xtest];
+X = [ones(height(y),1) X];
+theta = zeros(N_pixels+1,1);
 
-modelo = entrenarGaussianas(Xtr,ytr,N_clases,0,lambda(l));
-ytest_pred = clasificacionBayesiana(modelo,Xtest);
+for i = 1:10
+    y_clasif = (y == i);
+    th = minFunc(@costeLogReg, zeros(N_pixels+1,1), options, X, ...
+        y_clasif, lambda(best_model));
+    theta = [theta th];
+end
+
+ytest_pred = pred_sigmoid(Xtest,theta);
 
 % Calcular matriz de confusión
 
