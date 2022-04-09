@@ -16,7 +16,7 @@ for i=1:nc
     modelo{i}.Sigma = cov(Xi);
 
     if NaiveBayes == 1
-        modelo{i}.Sigma = diag(modelo{i}.Sigma);
+        modelo{i}.Sigma = diag(diag(modelo{i}.Sigma));
     end
 
     modelo{i}.Sigma = modelo{i}.Sigma + landa*eye(D);
