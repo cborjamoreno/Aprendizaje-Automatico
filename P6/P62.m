@@ -4,7 +4,7 @@ clear all
 close all
 
 % use YOUR image!
-I = imread('turing.png');
+I = imread('cesar.jpg');
 
 % Convert to B&W
 BW = rgb2gray(I);
@@ -22,7 +22,7 @@ pause
 % Apply SVD
 
 % Plot first 5 components
-for k = 1:5,
+for k = 1:5
     figure(2);
     %imshow(Xhat);
     colormap(gray);

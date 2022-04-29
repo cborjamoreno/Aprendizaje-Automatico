@@ -13,6 +13,7 @@ nrows=20;
 ncols=20;
 
 nimages = size(X,1);
+N_clases = 10;
 
 %Show the images
 % for I=1:40:nimages, 
@@ -23,6 +24,7 @@ nimages = size(X,1);
 
 %% Perform PCA following the instructions of the lab
 
+%estandarizar datos
 Xn = normalize(X,'center','mean');
 
 %calcular Sigma, U, A
@@ -50,14 +52,22 @@ Uk = U(:,(1:k));
 %reducir dimensión de los datos estandarizados
 Z = X*Uk;
 
-
-
-
 %% Use the classifier from previous labs on the projected space
 
+%entrenar con datos de entrenamiento reducidos
+[Ztr, ytr, Zcv, ycv] = separar(Z,y,0.8); %   Separar 20% de los datos para 
+                                         % validación
+lambda = logspace(-6, 2);
+[Etr,Ecv,best_lambda] = entrenarYclasificarBayes(Ztr,ytr,Zcv,ycv,N_clases, ...
+    lambda,0);
 
+%obtener Z de los datos de test
+Ztest = Xtest*Uk;
 
+modelo = entrenarGaussianas(Z,y,N_clases,0,lambda(best_lambda));
+ytest_pred = clasificacionBayesiana(modelo,Ztest);
 
+verConfusiones(Xtest, ytest, ytest_pred);
 
 
 
