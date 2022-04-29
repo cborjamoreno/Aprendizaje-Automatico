@@ -15,10 +15,10 @@ ncols=20;
 nimages = size(X,1);
 
 %Show the images
-for I=1:40:nimages, 
-    imshow(reshape(X(I,:),nrows,ncols))
-    pause(0.1)
-end
+% for I=1:40:nimages, 
+%     imshow(reshape(X(I,:),nrows,ncols))
+%     pause(0.1)
+% end
 
 
 %% Perform PCA following the instructions of the lab
@@ -26,8 +26,20 @@ end
 Xn = normalize(X,'center','mean');
 
 %calcular Sigma, U, A
-Sigma = 1/(m-1)*(X'*X);
-[U,A] =  eig(Sigma);
+Sigma = 1/(nimages-1)*(X'*X);
+[U,A] = eig(Sigma);
+
+%ordenar los vectores propios de U según los calores propios de A
+[A,I] = sort(diag(A),'descend');
+U = U(:, I);
+
+%escoger valor de k
+k_escogido = false;
+k = 1;
+while k_escogido == false && k <= (nrows*ncols)
+    
+end
+
 
 %% Use the classifier from previous labs on the projected space
 
