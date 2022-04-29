@@ -17,9 +17,11 @@ figure(1);
 colormap(gray);
 imshow(X);
 axis off;
-pause
+pause(1);
 
 % Apply SVD
+[U,S,V] = svd(X);
+Xhat = sum()
 
 % Plot first 5 components
 for k = 1:5
@@ -27,7 +29,7 @@ for k = 1:5
     %imshow(Xhat);
     colormap(gray);
     axis off;
-    pause
+    pause(1);
 end
 
 % Plot the image reconstructed with 1, 2, 5, 10, 20, and the total number
@@ -37,7 +39,7 @@ for k = [1 2 5 10 20 rank(X)],
     %imshow(Xhat);
     colormap(gray);
     axis off;
-    pause
+    pause(1);
 end
 
 % Find the value of k that maintains 90% of variability

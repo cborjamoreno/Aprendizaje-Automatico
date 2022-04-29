@@ -28,7 +28,7 @@ N_clases = 10;
 Xn = normalize(X,'center','mean');
 
 %calcular Sigma, U, A
-Sigma = 1/(nimages-1)*(X'*X);
+Sigma = 1/(nimages-1)*(Xn'*Xn);
 [U,A] = eig(Sigma);
 
 %ordenar los vectores propios de U según los calores propios de A
@@ -50,7 +50,7 @@ end
 Uk = U(:,(1:k));
 
 %reducir dimensión de los datos estandarizados
-Z = X*Uk;
+Z = Xn*Uk;
 
 %% Use the classifier from previous labs on the projected space
 
@@ -61,8 +61,13 @@ lambda = logspace(-6, 2);
 [Etr,Ecv,best_lambda] = entrenarYclasificarBayes(Ztr,ytr,Zcv,ycv,N_clases, ...
     lambda,0);
 
+disp(lambda(best_lambda));
+
+dibujarEvolucionErrores(lambda,best_lambda,Etr,Ecv);
+
 %obtener Z de los datos de test
-Ztest = Xtest*Uk;
+Xtestn = normalize(Xtest,'center','mean');
+Ztest = Xtestn*Uk;
 
 modelo = entrenarGaussianas(Z,y,N_clases,0,lambda(best_lambda));
 ytest_pred = clasificacionBayesiana(modelo,Ztest);
