@@ -46,8 +46,7 @@ while k_escogido == false && k <= (nrows*ncols)
     end
 end
 
-fprintf("k = %d\n", k);
-fprintf("\n");
+disp("k = " k);
 
 %calcular Uk
 Uk = U(:,(1:k));
@@ -75,14 +74,9 @@ verConfusiones(Xtest, ytest, ytest_pred);
 
 [m,P,R] = confusionMatrix(ytest_pred,ytest,N_clases);
 
-fprintf('Matriz de confusión:\n');
 disp(m);
-fprintf('Precisión para cada dígito:\n [');
-fprintf('%d\n ', P);
-fprintf(']\n\n');
-fprintf('Recall para cada dígito:\n [');
-fprintf('%d\n ', R);
-fprintf(']\n');
+disp(P);
+disp(R);
 
 
 

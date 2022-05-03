@@ -78,8 +78,7 @@ colormap(gray);
 axis off;
 
 % Compute and show savings in space
-original = nrows*ncols;
-reduced = (nrows+ncols+1)*29;
-fprintf("Componentes de la imagen original = %d\n",original);
-fprintf("Componentes tras la reducción con SVD = %d\n",reduced);
-fprintf("Espacio ahorrado = %.2f%%\n",((original-reduced)/original)*100);
+fprintf("Componentes de la imagen original = %d\n",nrows*ncols);
+fprintf("Componentes tras la reducción con SVD = %d\n",(nrows+ncols+1)*29);
+fprintf("Espacio ahorrado = %d\%\n",(nrows*ncols));
+disp((nrows+ncols+1)*29);

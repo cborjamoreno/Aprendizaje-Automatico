@@ -18,5 +18,5 @@ for i = 1:nc
 end
 figure        
 displayData(Xdib);
-title('Ejemplos de Confusiones');
+title('Ejemplos de Confusiones P6');
 drawnow;
