@@ -5,10 +5,9 @@ function munew = updateCentroids(D,c)
 % munew(K,n) new centroids
 
 k = height(unique(c));
-munew = zeros(k,3);
+munew
 
 for i=1:k
     v = D(c==i,:);
-    mean(v);
-    munew(i,:) = mean(v);
+    munew(i) = mean(v);
 end

@@ -3,3 +3,5 @@ function Z = updateClusters(D,mu)
 % mu(K,n) final centroids
 %
 % c(m) assignment of each datapoint to a class
+
+Z = dsearchn(mu,D);

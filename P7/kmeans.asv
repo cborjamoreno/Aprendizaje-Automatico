@@ -10,9 +10,9 @@ c = updateClusters(D,mu0);
 mu = updateCentroids(D,c);
 cnew = updateClusters(D,mu);
 while(c ~= cnew)
-    c = updateClusters(D,mu);
+    c = updateClusters(D,mu0);
     mu = updateCentroids(D,c);
-    cnew = updateClusters(D,mu);
+    cnew = updateCentroids(D,c);
 end
 
 
