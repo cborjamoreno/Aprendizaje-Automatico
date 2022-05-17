@@ -1,10 +1,9 @@
-function munew = updateCentroids(D,c)
+function munew = updateCentroids(D,c,k)
 % D((m,n), m datapoints, n dimensions
 % c(m) assignment of each datapoint to a class
 %
 % munew(K,n) new centroids
 
-k = height(unique(c));
 munew = zeros(k,3);
 
 for i=1:k
