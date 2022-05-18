@@ -8,10 +8,7 @@ function mu0 = initCentroids(D,K)
     rng('shuffle');
     nMuestrasCluster = m/K;
     for i=1:K
-        min = (i-1)*nMuestrasCluster + 1;
-        max = i*nMuestrasCluster;
-        ind_clusters = [ind_clusters randi([min max],1)];
-    end
-    mu0 = D(ind_clusters,:);
+        ind_clusters = [ind_clusters randi([1 m],1)];
+    
 end
 

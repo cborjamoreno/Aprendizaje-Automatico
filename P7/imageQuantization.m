@@ -1,6 +1,7 @@
 %% imagen
 figure(1)
 im = imread('smallparrot.jpg');
+% im = imread('atardecer.jpeg');
 imshow(im)
 
 %% datos
@@ -11,7 +12,7 @@ m = size(D,1);
 n = size(D,2);
 
 %% Kmeans 
-K = 16;
+K = 8;
 
 %% Escoger agrupamiento
 iter = 10;
@@ -19,15 +20,14 @@ MU = zeros(K,3);
 C = zeros(m,iter);
 J = zeros(iter,3);
 
-mu0 = initCentroids(D,K);
 for i=1:iter
     % inicialización de los centroides en muestras aleatorias
 %     rng('shuffle');
 %     ind_clusters = fix((m).*rand(K,1))';
 %     mu0 = D(ind_clusters,:);
+
     mu0 = initCentroids(D,K);
     
-
     %bucle kmeans
     [mu, c] = kmeans(D, mu0);
     MU(:,:,i) = mu;
@@ -40,6 +40,14 @@ for i=1:iter
     %calculo J
     j = funcionDistorsion(D,muc_j);
     J(i,:) = j;
+
+%     for h=1:K
+%         ind=find(c==h);
+%         qIM(ind,:)=repmat(mu(h,:),length(ind),1);
+%     end
+%     qIM=reshape(qIM,size(im,1),size(im,2),size(im,3));
+%     figure(2)
+%     imshow(uint8(qIM));    
 end
 
 [j,jindex] = min(sum(J,2));
