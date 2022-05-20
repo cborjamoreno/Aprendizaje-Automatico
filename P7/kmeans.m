@@ -13,10 +13,7 @@ c = updateClusters(D,mu0);
 mu = updateCentroids(D,c,k);
 
 while 1
-    for j=1:size(D,1)
-        muc_j = mu(c(j),:);
-    end
-    j = sum(funcionDistorsion(D,muc_j))/3;
+    j = funcionDistorsion(D,mu,c);
     J = [J j];
     c2 = updateClusters(D,mu);
     if (isequal(c,c2))

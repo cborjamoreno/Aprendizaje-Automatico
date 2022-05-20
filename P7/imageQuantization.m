@@ -2,9 +2,9 @@
 % close all;
 %% imagen
 figure(1)
-% im = imread('smallparrot.jpg');
+im = imread('smallparrot.jpg');
 % im = imread('atardecer.jpeg');
-im = imread('elcolor.jpg');
+% im = imread('elcolor.jpg');
 imshow(im)
 
 %% datos
@@ -15,46 +15,35 @@ m = size(D,1);
 n = size(D,2);
 
 %% Kmeans 
-K = 64;
-
+array_k = [2 4 8 16 32];
 %% Escoger agrupamiento
-iter = 5;
-MU = zeros(K,3);
-C = zeros(m,iter);
-% J = zeros(iter,3);
+J_k = [];
 
-% for i=1:iter
+for i=1:size(array_k,2)
+
+
     % inicialización de los centroides en muestras aleatorias
 %     rng('shuffle');
 %     ind_clusters = fix((m).*rand(K,1))';
 %     mu0 = D(ind_clusters,:);
+
+
+    K = array_k(i);
     mu0 = initCentroids(D,K);
 
     %bucle kmeans
     [mu, c, J] = kmeans(D, mu0);
-%     MU(:,:,i) = mu;
-%     C(:,i) = c;
+    j = min(J);
+    J_k = [J_k j];
 
-%     for j=1:m
-%         muc_j = mu(c(j),:);
-%     end
+end
 
-    %calculo J
-%     j = funcionDistorsion(D,muc_j);
-%     J(i,:) = j;
- 
-% end
+figure(3);
+plot(array_k, J_k, 'r-', 'LineWidth',1);
+title('Evolución coste')
+ylabel('Coste'); xlabel('K');
 
-% [j,jindex] = min(sum(J,2));
-% mu = MU(:,:,jindex);
-% c = C(:,jindex);
 
-disp(J);
-
-% figure(3);
-% plot(1:size(J,2), J, 'r-', 'LineWidth',1);
-% title('Evolución coste')
-% ylabel('Coste'); xlabel('Iteraciones');
 
 %% reconstruir imagen
 qIM=zeros(length(c),3);
