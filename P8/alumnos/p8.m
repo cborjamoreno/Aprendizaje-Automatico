@@ -182,7 +182,7 @@ initial_parameters = [X(:); Theta(:)];
 options = optimset('GradObj', 'on', 'MaxIter', 100);
 
 % Set Regularization
-lambda = 10;
+lambda = 200;
 theta = fmincg (@(t)(cofiCostFunc(t, Y, R, num_users, num_movies, ...
                                 num_features, lambda)), ...
                 initial_parameters, options);
@@ -202,10 +202,8 @@ pause;
 %  the predictions matrix.
 %
 
-% FILL HERE!!!!!!!!!!!!!!!!!!
-% Make predictions for yourself in my_predictions (now is random)
-my_predictions = randperm(num_movies);
-
+p = X * Theta';
+my_predictions = p(:,1) + Ymean;
 
 % Sort the predictions and show them
 [r, ix] = sort(my_predictions, 'descend');
